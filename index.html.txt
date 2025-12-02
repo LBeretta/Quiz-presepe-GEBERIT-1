@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz: Scatole di cartone delle uova</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 700px;
+      width: 100%;
+      margin: 24px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px 24px 28px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.6rem;
+      color: #111827;
+    }
+
+    p {
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    a.button-link {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    a.button-link:hover {
+      opacity: 0.9;
+    }
+
+    .question-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+      color: #111827;
+    }
+
+    .answers {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+    }
+
+    .answers li {
+      margin-bottom: 8px;
+    }
+
+    .answer-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.05s;
+    }
+
+    .answer-option:hover {
+      background: #f9fafb;
+      border-color: #d1d5db;
+      transform: translateY(-1px);
+    }
+
+    .answer-option input {
+      cursor: pointer;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.05s, box-shadow 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #16a34a;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .result.ok {
+      background: #ecfdf3;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .result.ko {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        margin: 12px;
+      }
+
+      .card {
+        padding: 18px 16px 22px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- INTRO CON LINK -->
+    <div class="card">
+      <h1>Quiz: Scatole di cartone delle uova</h1>
+      <p>
+        Benvenuto! Rispondi alla domanda per verificare le tue conoscenze.
+      </p>
+      <a href="#quiz" class="button-link">Vai al quiz →</a>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card" id="quiz">
+      <div class="question-title">Domanda 1</div>
+      <div class="question-text">
+        Le scatole delle uova come possono essere considerate in ambito di acustica?
+      </div>
+
+      <ul class="answers">
+        <li>
+          <label class="answer-option">
+            <input type="radio" name="answer" value="0" />
+            <span>Materiale fonoassorbente</span>
+          </label>
+        </li>
+        <li>
+          <label class="answer-option">
+            <input type="radio" name="answer" value="1" />
+            <span>Materiale fonoisolante</span>
+          </label>
+        </li>
+        <li>
+          <label class="answer-option">
+            <input type="radio" name="answer" value="2" />
+            <span>Disaccoppiante</span>
+          </label>
+        </li>
+      </ul>
+
+      <button id="check-btn">Verifica risposta</button>
+
+      <div id="result" class="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const correctIndex = 0;
+
+    const checkBtn = document.getElementById("check-btn");
+    const resultBox = document.getElementById("result");
+
+    checkBtn.addEventListener("click", () => {
+      const selected = document.querySelector('input[name="answer"]:checked');
+
+      if (!selected) {
+        resultBox.textContent = "Seleziona un'opzione prima di verificare.";
+        resultBox.className = "result ko";
+        resultBox.style.display = "block";
+        return;
+      }
+
+      const value = parseInt(selected.value, 10);
+
+      if (value === correctIndex) {
+        resultBox.innerHTML =
+          "<strong>Corretto!</strong> Le scatole di cartone delle uova sono considerate un materiale <strong>fonoassorbente</strong> (pur con prestazioni limitate rispetto a materiali professionali).";
+        resultBox.className = "result ok";
+      } else {
+        resultBox.innerHTML =
+          "<strong>Risposta errata.</strong><br/>In acustica, le scatole di cartone delle uova vengono considerate principalmente un materiale <strong>fonoassorbente</strong>.";
+        resultBox.className = "result ko";
+      }
+
+      resultBox.style.display = "block";
+    });
+  </script>
+</body>
+</html>
